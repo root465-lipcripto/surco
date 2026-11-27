@@ -1,0 +1,20 @@
+{
+  "version": 4,
+  "configurePresets": [
+    {"name":"common","hidden":true,"generator":"Ninja","binaryDir":"${sourceDir}/build/${presetName}","cacheVariables":{"CMAKE_INSTALL_LIBDIR":"lib"}},
+    {"name":"debug","inherits":"common","cacheVariables":{"CMAKE_BUILD_TYPE":"Debug"}},
+    {"name":"release","inherits":"common","cacheVariables":{"CMAKE_BUILD_TYPE":"Release"}},
+    {"name":"scalar","inherits":"debug","cacheVariables":{"SURCO_ENABLE_NASM":"OFF"}},
+    {"name":"sanitize","inherits":"debug","cacheVariables":{"SURCO_SANITIZE":"ON"}}
+  ],
+  "buildPresets": [
+    {"name":"debug","configurePreset":"debug"}, {"name":"release","configurePreset":"release"},
+    {"name":"scalar","configurePreset":"scalar"}, {"name":"sanitize","configurePreset":"sanitize"}
+  ],
+  "testPresets": [
+    {"name":"debug","configurePreset":"debug","output":{"outputOnFailure":true}},
+    {"name":"release","configurePreset":"release","output":{"outputOnFailure":true}},
+    {"name":"scalar","configurePreset":"scalar","output":{"outputOnFailure":true}},
+    {"name":"sanitize","configurePreset":"sanitize","output":{"outputOnFailure":true}}
+  ]
+}
