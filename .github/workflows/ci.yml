@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: gcc-debug
+            cc: gcc-13
+            preset: debug
+          - name: gcc-release
+            cc: gcc-13
+            preset: release
+          - name: clang-debug
+            cc: clang-18
+            preset: debug
+          - name: clang-release
+            cc: clang-18
+            preset: release
+          - name: gcc-scalar
+            cc: gcc-13
+            preset: scalar
+          - name: clang-sanitizers
+            cc: clang-18
+            preset: sanitize
+            extra: -DSURCO_FUZZ=ON
+    env:
+      CC: ${{ matrix.cc }}
+      ASAN_OPTIONS: detect_leaks=1
+      UBSAN_OPTIONS: halt_on_error=1
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Install native build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-13 clang-18 libclang-rt-18-dev nasm ninja-build
+      - name: Build with strict warnings
+        run: |
+          cmake --preset ${{ matrix.preset }} ${{ matrix.extra }}
+          cmake --build --preset ${{ matrix.preset }} --parallel
+          cmake --build --preset ${{ matrix.preset }} --target surco-docs
+      - name: Test actual storage and backends
+        run: |
+          ctest --preset ${{ matrix.preset }} --parallel 2 --output-junit tests.xml
+          build/${{ matrix.preset }}/surco doctor
+      - name: Smoke fuzz the decoder
+        if: matrix.preset == 'sanitize'
+        run: |
+          mkdir -p build/sanitize/corpus
+          cp tests/fixtures/*.surco build/sanitize/corpus/
+          set -o pipefail
+          build/sanitize/surco_fuzz -max_total_time=10 -timeout=3 -max_len=16384 -artifact_prefix=build/sanitize/ build/sanitize/corpus 2>&1 | tee build/sanitize/fuzz.log
+      - name: Package and test extracted files
+        if: matrix.name == 'gcc-release'
+        run: scripts/package.sh build/release artifacts
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: ${{ matrix.name }}
+          path: |
+            tests.xml
+            build/${{ matrix.preset }}/docs/
+            build/${{ matrix.preset }}/fuzz.log
+            artifacts/
+          if-no-files-found: error

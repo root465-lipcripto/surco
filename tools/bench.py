@@ -4,7 +4,6 @@ import argparse
 import csv
 import filecmp
 import json
-import os
 import platform
 import re
 import statistics
@@ -21,13 +20,12 @@ def text(*command):
 
 
 def timed(command, output):
+    usage = output.with_name("rss.txt")
     start = perf_counter_ns()
-    with output.open("wb") as stream, subprocess.Popen(command, stdout=stream) as child:
-        _, status, usage = os.wait4(child.pid, 0)
-        child.returncode = os.waitstatus_to_exitcode(status)
-        if child.returncode:
-            raise subprocess.CalledProcessError(child.returncode, command)
-    return (perf_counter_ns() - start) / 1e6, usage.ru_maxrss
+    with output.open("wb") as stream:
+        subprocess.run(["/usr/bin/time", "-f", "%M", "-o", usage, "--", *command],
+                       stdout=stream, check=True)
+    return (perf_counter_ns() - start) / 1e6, int(usage.read_text())
 
 
 def measurements(values):

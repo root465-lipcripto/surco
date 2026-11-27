@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Surco recording</title>
+<style>
+:root {
+  color-scheme: light;
+  --paper: #edf2f7;
+  --panel: #fbfcff;
+  --ink: #19263a;
+  --muted: #496072;
+  --rule: #c7d4e0;
+  --indigo: #4341a0;
+  --rust: #9a4a22;
+  --green: #316651;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+}
+* { box-sizing: border-box }
+body { margin: 0 }
+main { width: min(1110px, 100% - 40px); margin: 44px auto 54px }
+header { display: flex; align-items: start; justify-content: space-between; gap: 20px }
+.brand { color: var(--green); font-size: 18px; font-weight: 750; letter-spacing: -.02em }
+.brand svg { vertical-align: -4px; margin-right: 5px }
+h1 { font-size: clamp(1.7rem, 4vw, 3rem); line-height: 1.12; letter-spacing: -.047em;
+     margin: 12px 0 5px; overflow-wrap: anywhere }
+#origin { margin: 0; color: var(--muted) }
+#integrity { color: var(--green); border: 1px solid #83a796; white-space: nowrap;
+             padding: 7px 12px; border-radius: 4px; font-size: .875rem }
+dl { margin: 24px 0 28px; display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr;
+     gap: 5px 18px; padding: 12px 0; border-block: 1px solid var(--rule) }
+dl div { min-width: 0; padding: 4px 0 }
+dt, small { color: var(--muted); font-size: .85rem }
+dd { margin: 5px 0 0; font-variant-numeric: tabular-nums; font-size: 1.045rem;
+     font-weight: 650; overflow-wrap: anywhere }
+#intervals { padding: 16px 20px; background: var(--panel); border: 1px solid var(--rule); border-radius: 6px }
+article + article { border-top: 1px solid var(--rule); padding-top: 12px; margin-top: 11px }
+.lane { display: flex; align-items: baseline; justify-content: space-between; gap: 10px }
+h2 { margin: 0; font-size: 1rem; overflow-wrap: anywhere }
+output, .axis { font-family: ui-monospace, monospace; font-size: .85rem }
+canvas { display: block; width: 100%; height: 135px }
+.axis { display:flex; justify-content:space-between; color:var(--muted); padding-left:55px; gap:8px }
+.axis span { overflow-wrap: anywhere }
+.controls { display: grid; grid-template-columns: 1fr auto; gap: 5px 12px; margin-top: 19px;
+            padding-top: 12px; border-top: 1px solid var(--rule) }
+.controls label { font-size: .95rem; font-weight: 650 }
+input { grid-column: 1 / -1; width: 100%; accent-color: var(--indigo) }
+input:focus-visible { outline: 2px solid var(--indigo); outline-offset: 3px }
+footer { margin-top: 12px; color: var(--muted) }
+@media (max-width: 630px) {
+  main { width: calc(100% - 26px); margin-top: 22px }
+  header { flex-wrap: wrap; gap: 8px }
+  dl { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 17px }
+  #intervals { padding: 12px }
+  canvas { height: 115px }
+}
+</style>
+<main>
+<header>
+  <div>
+    <div class="brand"><svg aria-hidden="true" width="22" height="20" viewBox="0 0 32 28" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 6h8l7 10L23 6h8M1 14h8l7 11 7-11h8"/></svg>surco</div>
+    <h1 id="filename">Recording</h1>
+    <p id="origin" hidden>Synthetic demonstration</p>
+  </div>
+  <div id="integrity">Integrity verified on export</div>
+</header>
+<dl id="metadata"></dl>
+<section id="intervals" aria-label="Signals">
+  <div id="lanes"></div>
+  <div class="axis" aria-label="Timestamp range"><span id="first"></span><span id="last"></span></div>
+  <div class="controls" id="controls">
+    <label for="sample">Inspect sample</label>
+    <output id="time" for="sample" aria-live="polite"></output>
+    <input id="sample" type="range" min="0" value="0">
+  </div>
+</section>
+<footer><small id="coverage"></small></footer>
+</main>
+<script type="application/json" id="data">SURCO_DATA</script>
+<script>
+"use strict";
+const {meta, points, synthetic, filename} = JSON.parse(document.getElementById("data").textContent);
+const get = id => document.getElementById(id);
+const format = new Intl.NumberFormat("en");
+const number = value => format.format(value);
+get("filename").textContent = filename;
+get("origin").hidden = !synthetic;
+const stats = [
+  ["Samples", number(meta.samples)], ["Channels", number(meta.channels.length)],
+  ["Archive size", `${number(meta.file_bytes)} B`],
+  ["Archive / raw records", meta.raw_bytes ? `${(100 * meta.file_bytes / meta.raw_bytes).toFixed(2)}%` : "—"],
+  ["Blocks", `${number(meta.blocks)} · ${number(meta.compressed_blocks)} compressed`],
+  ["Temporal index", meta.indexed ? "Present" : "Absent"],
+  ["Format", `v${meta.version} · ${meta.timestamp_unit}`], ["Decoder backend", meta.backend]
+];
+for (const [label, value] of stats) {
+  const group = document.createElement("div");
+  const name = document.createElement("dt");
+  const data = document.createElement("dd");
+  name.textContent = label;
+  data.textContent = value;
+  group.append(name, data);
+  get("metadata").append(group);
+}
+const slider = get("sample");
+slider.max = Math.max(0, points.length - 1);
+const start = BigInt(meta.first), finish = BigInt(meta.last);
+const span = finish - start;
+const axisText = time => `${number(BigInt(time))} ${meta.timestamp_unit}`;
+const positions = points.map(point => span ? Number((BigInt(point[0]) - start) * 1000000n / span) / 1000000 : 0);
+const styles = getComputedStyle(document.documentElement);
+const theme = Object.fromEntries(["rule", "muted", "indigo", "rust", "green"].map(name => [name, styles.getPropertyValue("--" + name)]));
+const plots = [];
+if (!points.length) {
+  get("lanes").textContent = "This recording has no samples.";
+  get("controls").hidden = true;
+  get("controls").style.display = "none";
+} else {
+  get("first").textContent = axisText(start);
+  get("last").textContent = axisText(finish);
+  for (const [index, channel] of meta.channels.entries()) {
+    const lane = document.createElement("article");
+    const caption = document.createElement("div");
+    caption.className = "lane";
+    const name = document.createElement("h2");
+    name.textContent = channel;
+    const value = document.createElement("output");
+    value.htmlFor = "sample";
+    caption.append(name, value);
+    const chart = document.createElement("canvas");
+    chart.setAttribute("role", "img");
+    chart.setAttribute("aria-label", `Time plot of ${channel}. Use Inspect sample for individual values.`);
+    lane.append(caption, chart);
+    get("lanes").append(lane);
+    const series = points.map(row => row[index + 1]);
+    plots.push({chart, value, series, min: Math.min(...series), max: Math.max(...series),
+                color: [theme.indigo, theme.rust, theme.green][index % 3]});
+  }
+}
+get("coverage").textContent = points.length < meta.samples
+  ? `Showing ${number(points.length)} evenly spaced records from ${number(meta.samples)}. Values shown are original samples.`
+  : `Showing all ${number(meta.samples)} stored samples.`;
+
+function render() {
+  if (!points.length) return;
+  const selected = Number(slider.value);
+  const time = axisText(points[selected][0]);
+  get("time").textContent = time;
+  slider.setAttribute("aria-valuetext", time);
+  for (const {chart, value, series, min, max, color} of plots) {
+    value.textContent = number(series[selected]);
+    const ratio = window.devicePixelRatio || 1;
+    const w = chart.clientWidth, h = chart.clientHeight;
+    chart.width = w * ratio;
+    chart.height = h * ratio;
+    const context = chart.getContext("2d");
+    context.scale(ratio, ratio);
+    const left = 55, top = 12, bottom = h - 14, right = w - 8;
+    const x = i => left + (right - left) * positions[i];
+    const y = v => max === min ? (top + bottom) / 2 : bottom - (bottom - top) * (v - min) / (max - min);
+    context.strokeStyle = theme.rule;
+    context.fillStyle = theme.muted;
+    context.font = "11px ui-monospace, monospace";
+    context.textAlign = "right";
+    for (let i = 0; i <= 4; i++) {
+      const tick = Math.round(left + (right - left) * i / 4) + .5;
+      context.beginPath(); context.moveTo(tick, top); context.lineTo(tick, bottom); context.stroke();
+    }
+    for (const v of (min === max ? [min] : [max, min])) {
+      const tick = Math.round(y(v)) + .5;
+      context.beginPath(); context.moveTo(left, tick); context.lineTo(right, tick); context.stroke();
+      context.fillText(String(v), left - 7, tick + 3, left - 8);
+    }
+    context.strokeStyle = color;
+    context.lineWidth = 1.5;
+    context.beginPath();
+    for (let i = 0; i < series.length; i++) {
+      if (i) context.lineTo(x(i), y(series[i]));
+      else context.moveTo(x(i), y(series[i]));
+    }
+    context.stroke();
+    context.strokeStyle = theme.muted;
+    context.lineWidth = 1;
+    context.beginPath(); context.moveTo(x(selected), top); context.lineTo(x(selected), bottom); context.stroke();
+    context.fillStyle = color;
+    context.beginPath(); context.arc(x(selected), y(series[selected]), 4, 0, 2 * Math.PI); context.fill();
+  }
+}
+slider.addEventListener("input", render);
+window.addEventListener("resize", render);
+render();
+</script>
+</html>
