@@ -66,3 +66,10 @@ timestamp_us,channel_0
 100000,23
 200000,21
 ```
+
+The board entered BOOTSEL for both flash operations. Before installing
+the test image, picotool 2.3.1 saved the original 4 MiB of QSPI flash
+and verified it against the board. After capturing the synthetic data,
+the original image was restored and a full flash readback matched the
+backup byte for byte. The original application then resumed its USB
+serial heartbeat. [picotool documentation](https://github.com/raspberrypi/picotool)
