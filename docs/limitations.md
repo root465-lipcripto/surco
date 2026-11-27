@@ -24,5 +24,6 @@
   crash durability.
 - Timed replay delays between CSV rows, capped at 60 seconds per
   scaled gap. Terminal/output overhead adds to elapsed time.
-- Serial ingestion was verified with pseudo-terminals. A physical Pico
-  2 W session remains pending.
+- Serial ingestion was verified with pseudo-terminals and a physical
+  Pico 2 W streaming the one-channel synthetic example. Extended physical
+  sessions and sensor workloads remain unmeasured.

@@ -33,6 +33,36 @@ Use the device path you have independently identified. The
 [WSila synthetic example](../examples/wsila/synthetic.wsila) emits three
 fixed records using documented `serial.println` and `time.sleep`.  Its
 source passes `wsilac check` at WSila commit
-`746cc23ec0ac4679dad45734a630951e08ed6e81`. The capture tests use
-pseudo-terminals. Physical Pico 2 W capture remains pending.
+`746cc23ec0ac4679dad45734a630951e08ed6e81`. The automated capture tests use
+pseudo-terminals for repeatability.
 [WSila language reference](https://github.com/root465-lipcripto/WSila/blob/746cc23ec0ac4679dad45734a630951e08ed6e81/docs/language.md)
+
+## Physical capture on a Pico 2 W
+
+On 2026-11-27, a Raspberry Pi Pico 2 W running the WSila synthetic
+example was connected over USB to Fedora 45. The example was
+built for the RP2350 with Pico SDK 2.3.1 using the WSila commit above.
+The host ran Surco 0.1.0 at commit
+`9528b69d5c29b32f4782f5019f036105a1ce3b15`.
+
+The example emits three records after a two-second startup delay.
+Open its CDC port promptly after firmware boot. Use the device path
+assigned by your host.
+
+```sh
+surco capture --device /dev/ttyACM0 --channels 1 --baud 115200 \
+  --timeout-ms 9000 --samples 3 -o synthetic.surco
+surco verify synthetic.surco
+surco unpack synthetic.surco
+```
+
+Surco received three samples with zero malformed or incomplete frames.
+Verification passed for the indexed 187-byte archive, which contained one
+compressed block. The decoded CSV matched the example byte for byte.
+
+```csv
+timestamp_us,channel_0
+0,20
+100000,23
+200000,21
+```

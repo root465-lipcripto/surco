@@ -39,3 +39,9 @@ mkdir -p build/sanitize/corpus
 cp tests/fixtures/*.surco build/sanitize/corpus/
 build/sanitize/surco_fuzz -max_total_time=15 -timeout=3 -max_len=16384 build/sanitize/corpus
 ```
+
+## Physical serial test
+
+The [Pico 2 W hardware run](embedded.md#physical-capture-on-a-pico-2-w)
+validated the one-channel WSila example over USB CDC. CI covers malformed
+frames, multiple channels and termination with pseudo-terminals.
