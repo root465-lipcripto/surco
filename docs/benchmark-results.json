@@ -1,0 +1,834 @@
+{
+  "cpu": "AMD Ryzen Z2 A",
+  "system": "Fedora Linux 45 (KDE Plasma Desktop Edition)",
+  "kernel": "7.2.11-300.fc45.x86_64",
+  "compiler": "cc (GCC) 16.2.1 20260819 (Red Hat 16.2.1-2)",
+  "build_flags": "-O3 -DNDEBUG -std=c17",
+  "nasm": "NASM version 3.02 compiled on Jul 16 2026",
+  "lto": false,
+  "commit": "f7ce0a840b0ff5203361d3e582604905a6b8af6d",
+  "zstandard": "*** Zstandard CLI (64-bit) v1.5.7, by Yann Collet ***",
+  "repetitions": 7,
+  "dataset_seed": 734521,
+  "transforms": [
+    {
+      "backend": "scalar",
+      "words": 262144,
+      "passes": 32,
+      "repetitions": 7,
+      "delta_mb_s": {
+        "min": 4974.039,
+        "median": 6732.904,
+        "max": 7574.35
+      },
+      "prefix_mb_s": {
+        "min": 8354.713,
+        "median": 10309.829,
+        "max": 10926.846
+      }
+    },
+    {
+      "backend": "sse2",
+      "words": 262144,
+      "passes": 32,
+      "repetitions": 7,
+      "delta_mb_s": {
+        "min": 13100.266,
+        "median": 18754.262,
+        "max": 19469.079
+      },
+      "prefix_mb_s": {
+        "min": 9958.56,
+        "median": 16034.084,
+        "max": 17972.158
+      }
+    }
+  ],
+  "datasets": [
+    {
+      "pattern": "constant",
+      "timestamps": "regular",
+      "rows": 120000,
+      "numeric_bytes": 1920000,
+      "query_from": 58800000,
+      "query_to": 61200000,
+      "results": {
+        "scalar": {
+          "bytes": 131334,
+          "compressed_blocks": 118,
+          "pack": {
+            "ms": {
+              "min": 13.409,
+              "median": 14.223,
+              "max": 18.152
+            },
+            "peak_rss_kib": {
+              "min": 1744,
+              "median": 1892,
+              "max": 1972
+            }
+          },
+          "unpack": {
+            "ms": {
+              "min": 29.657,
+              "median": 30.046,
+              "max": 32.04
+            },
+            "peak_rss_kib": {
+              "min": 1744,
+              "median": 1824,
+              "max": 1940
+            }
+          },
+          "query": {
+            "ms": {
+              "min": 3.342,
+              "median": 3.855,
+              "max": 4.158
+            },
+            "peak_rss_kib": {
+              "min": 1744,
+              "median": 1892,
+              "max": 1892
+            }
+          }
+        },
+        "sse2": {
+          "bytes": 131334,
+          "compressed_blocks": 118,
+          "pack": {
+            "ms": {
+              "min": 12.749,
+              "median": 13.658,
+              "max": 16.621
+            },
+            "peak_rss_kib": {
+              "min": 1820,
+              "median": 1876,
+              "max": 1960
+            }
+          },
+          "unpack": {
+            "ms": {
+              "min": 28.516,
+              "median": 29.288,
+              "max": 30.308
+            },
+            "peak_rss_kib": {
+              "min": 1616,
+              "median": 1876,
+              "max": 1900
+            }
+          },
+          "query": {
+            "ms": {
+              "min": 3.273,
+              "median": 3.568,
+              "max": 4.604
+            },
+            "peak_rss_kib": {
+              "min": 1744,
+              "median": 1892,
+              "max": 1968
+            }
+          }
+        },
+        "raw": {
+          "bytes": 1930036,
+          "compressed_blocks": 0,
+          "pack": {
+            "ms": {
+              "min": 14.378,
+              "median": 15.102,
+              "max": 15.672
+            },
+            "peak_rss_kib": {
+              "min": 1788,
+              "median": 1880,
+              "max": 1960
+            }
+          },
+          "unpack": {
+            "ms": {
+              "min": 28.05,
+              "median": 30.162,
+              "max": 31.336
+            },
+            "peak_rss_kib": {
+              "min": 1696,
+              "median": 1876,
+              "max": 1968
+            }
+          },
+          "query": {
+            "ms": {
+              "min": 3.442,
+              "median": 4.102,
+              "max": 4.718
+            },
+            "peak_rss_kib": {
+              "min": 1744,
+              "median": 1876,
+              "max": 1968
+            }
+          }
+        },
+        "zstd_3": {
+          "bytes": 241676,
+          "compress": {
+            "ms": {
+              "min": 13.721,
+              "median": 15.366,
+              "max": 16.009
+            },
+            "peak_rss_kib": {
+              "min": 6792,
+              "median": 6912,
+              "max": 7048
+            }
+          },
+          "decompress": {
+            "ms": {
+              "min": 7.08,
+              "median": 8.051,
+              "max": 8.681
+            },
+            "peak_rss_kib": {
+              "min": 4368,
+              "median": 4516,
+              "max": 4624
+            }
+          }
+        }
+      }
+    },
+    {
+      "pattern": "walk",
+      "timestamps": "irregular",
+      "rows": 120000,
+      "numeric_bytes": 1920000,
+      "query_from": 58800000,
+      "query_to": 61200000,
+      "results": {
+        "scalar": {
+          "bytes": 333021,
+          "compressed_blocks": 118,
+          "pack": {
+            "ms": {
+              "min": 16.947,
+              "median": 25.457,
+              "max": 31.217
+            },
+            "peak_rss_kib": {
+              "min": 1828,
+              "median": 1896,
+              "max": 1972
+            }
+          },
+          "unpack": {
+            "ms": {
+              "min": 28.806,
+              "median": 47.094,
+              "max": 58.935
+            },
+            "peak_rss_kib": {
+              "min": 1764,
+              "median": 1876,
+              "max": 1892
+            }
+          },
+          "query": {
+            "ms": {
+              "min": 3.742,
+              "median": 10.554,
+              "max": 45.47
+            },
+            "peak_rss_kib": {
+              "min": 1728,
+              "median": 1820,
+              "max": 1892
+            }
+          }
+        },
+        "sse2": {
+          "bytes": 333021,
+          "compressed_blocks": 118,
+          "pack": {
+            "ms": {
+              "min": 19.16,
+              "median": 22.247,
+              "max": 23.797
+            },
+            "peak_rss_kib": {
+              "min": 1880,
+              "median": 1892,
+              "max": 1972
+            }
+          },
+          "unpack": {
+            "ms": {
+              "min": 37.62,
+              "median": 41.669,
+              "max": 47.151
+            },
+            "peak_rss_kib": {
+              "min": 1744,
+              "median": 1876,
+              "max": 1940
+            }
+          },
+          "query": {
+            "ms": {
+              "min": 4.585,
+              "median": 4.886,
+              "max": 5.966
+            },
+            "peak_rss_kib": {
+              "min": 1824,
+              "median": 1900,
+              "max": 1968
+            }
+          }
+        },
+        "raw": {
+          "bytes": 1930036,
+          "compressed_blocks": 0,
+          "pack": {
+            "ms": {
+              "min": 15.831,
+              "median": 17.82,
+              "max": 18.917
+            },
+            "peak_rss_kib": {
+              "min": 1876,
+              "median": 1896,
+              "max": 1960
+            }
+          },
+          "unpack": {
+            "ms": {
+              "min": 30.566,
+              "median": 32.64,
+              "max": 35.453
+            },
+            "peak_rss_kib": {
+              "min": 1732,
+              "median": 1820,
+              "max": 1968
+            }
+          },
+          "query": {
+            "ms": {
+              "min": 3.379,
+              "median": 4.102,
+              "max": 4.645
+            },
+            "peak_rss_kib": {
+              "min": 1764,
+              "median": 1824,
+              "max": 1900
+            }
+          }
+        },
+        "zstd_3": {
+          "bytes": 718135,
+          "compress": {
+            "ms": {
+              "min": 24.395,
+              "median": 25.553,
+              "max": 27.553
+            },
+            "peak_rss_kib": {
+              "min": 7496,
+              "median": 7616,
+              "max": 7796
+            }
+          },
+          "decompress": {
+            "ms": {
+              "min": 8.79,
+              "median": 9.329,
+              "max": 10.705
+            },
+            "peak_rss_kib": {
+              "min": 5216,
+              "median": 5284,
+              "max": 5408
+            }
+          }
+        }
+      }
+    },
+    {
+      "pattern": "periodic",
+      "timestamps": "regular",
+      "rows": 120000,
+      "numeric_bytes": 1920000,
+      "query_from": 58800000,
+      "query_to": 61200000,
+      "results": {
+        "scalar": {
+          "bytes": 153037,
+          "compressed_blocks": 118,
+          "pack": {
+            "ms": {
+              "min": 16.417,
+              "median": 17.332,
+              "max": 17.747
+            },
+            "peak_rss_kib": {
+              "min": 1744,
+              "median": 1820,
+              "max": 1960
+            }
+          },
+          "unpack": {
+            "ms": {
+              "min": 30.635,
+              "median": 32.276,
+              "max": 33.276
+            },
+            "peak_rss_kib": {
+              "min": 1744,
+              "median": 1876,
+              "max": 1968
+            }
+          },
+          "query": {
+            "ms": {
+              "min": 3.752,
+              "median": 4.393,
+              "max": 4.777
+            },
+            "peak_rss_kib": {
+              "min": 1656,
+              "median": 1892,
+              "max": 1952
+            }
+          }
+        },
+        "sse2": {
+          "bytes": 153037,
+          "compressed_blocks": 118,
+          "pack": {
+            "ms": {
+              "min": 15.523,
+              "median": 15.952,
+              "max": 16.6
+            },
+            "peak_rss_kib": {
+              "min": 1696,
+              "median": 1828,
+              "max": 1972
+            }
+          },
+          "unpack": {
+            "ms": {
+              "min": 29.185,
+              "median": 30.463,
+              "max": 31.864
+            },
+            "peak_rss_kib": {
+              "min": 1748,
+              "median": 1820,
+              "max": 1892
+            }
+          },
+          "query": {
+            "ms": {
+              "min": 3.145,
+              "median": 3.901,
+              "max": 5.188
+            },
+            "peak_rss_kib": {
+              "min": 1820,
+              "median": 1876,
+              "max": 1892
+            }
+          }
+        },
+        "raw": {
+          "bytes": 1930036,
+          "compressed_blocks": 0,
+          "pack": {
+            "ms": {
+              "min": 16.804,
+              "median": 17.224,
+              "max": 18.25
+            },
+            "peak_rss_kib": {
+              "min": 1880,
+              "median": 1896,
+              "max": 1960
+            }
+          },
+          "unpack": {
+            "ms": {
+              "min": 28.786,
+              "median": 30.787,
+              "max": 33.624
+            },
+            "peak_rss_kib": {
+              "min": 1744,
+              "median": 1820,
+              "max": 1968
+            }
+          },
+          "query": {
+            "ms": {
+              "min": 3.34,
+              "median": 4.291,
+              "max": 4.439
+            },
+            "peak_rss_kib": {
+              "min": 1688,
+              "median": 1764,
+              "max": 1940
+            }
+          }
+        },
+        "zstd_3": {
+          "bytes": 487026,
+          "compress": {
+            "ms": {
+              "min": 20.374,
+              "median": 21.471,
+              "max": 22.554
+            },
+            "peak_rss_kib": {
+              "min": 6992,
+              "median": 7204,
+              "max": 7372
+            }
+          },
+          "decompress": {
+            "ms": {
+              "min": 7.334,
+              "median": 8.657,
+              "max": 10.249
+            },
+            "peak_rss_kib": {
+              "min": 4884,
+              "median": 4992,
+              "max": 5256
+            }
+          }
+        }
+      }
+    },
+    {
+      "pattern": "noisy",
+      "timestamps": "irregular",
+      "rows": 120000,
+      "numeric_bytes": 1920000,
+      "query_from": 58800000,
+      "query_to": 61200000,
+      "results": {
+        "scalar": {
+          "bytes": 557593,
+          "compressed_blocks": 118,
+          "pack": {
+            "ms": {
+              "min": 19.736,
+              "median": 20.735,
+              "max": 21.459
+            },
+            "peak_rss_kib": {
+              "min": 1664,
+              "median": 1892,
+              "max": 1972
+            }
+          },
+          "unpack": {
+            "ms": {
+              "min": 32.046,
+              "median": 33.277,
+              "max": 34.707
+            },
+            "peak_rss_kib": {
+              "min": 1740,
+              "median": 1796,
+              "max": 1824
+            }
+          },
+          "query": {
+            "ms": {
+              "min": 3.418,
+              "median": 3.915,
+              "max": 4.391
+            },
+            "peak_rss_kib": {
+              "min": 1796,
+              "median": 1892,
+              "max": 1968
+            }
+          }
+        },
+        "sse2": {
+          "bytes": 557593,
+          "compressed_blocks": 118,
+          "pack": {
+            "ms": {
+              "min": 18.018,
+              "median": 18.617,
+              "max": 19.845
+            },
+            "peak_rss_kib": {
+              "min": 1744,
+              "median": 1828,
+              "max": 1904
+            }
+          },
+          "unpack": {
+            "ms": {
+              "min": 30.638,
+              "median": 31.329,
+              "max": 32.173
+            },
+            "peak_rss_kib": {
+              "min": 1696,
+              "median": 1820,
+              "max": 1940
+            }
+          },
+          "query": {
+            "ms": {
+              "min": 3.301,
+              "median": 3.505,
+              "max": 4.071
+            },
+            "peak_rss_kib": {
+              "min": 1764,
+              "median": 1892,
+              "max": 1968
+            }
+          }
+        },
+        "raw": {
+          "bytes": 1930036,
+          "compressed_blocks": 0,
+          "pack": {
+            "ms": {
+              "min": 17.309,
+              "median": 17.869,
+              "max": 18.553
+            },
+            "peak_rss_kib": {
+              "min": 1744,
+              "median": 1820,
+              "max": 1972
+            }
+          },
+          "unpack": {
+            "ms": {
+              "min": 29.55,
+              "median": 30.871,
+              "max": 32.59
+            },
+            "peak_rss_kib": {
+              "min": 1764,
+              "median": 1824,
+              "max": 1900
+            }
+          },
+          "query": {
+            "ms": {
+              "min": 3.242,
+              "median": 3.903,
+              "max": 4.156
+            },
+            "peak_rss_kib": {
+              "min": 1892,
+              "median": 1892,
+              "max": 1968
+            }
+          }
+        },
+        "zstd_3": {
+          "bytes": 959688,
+          "compress": {
+            "ms": {
+              "min": 26.544,
+              "median": 28.335,
+              "max": 32.763
+            },
+            "peak_rss_kib": {
+              "min": 7796,
+              "median": 7912,
+              "max": 8012
+            }
+          },
+          "decompress": {
+            "ms": {
+              "min": 8.803,
+              "median": 9.515,
+              "max": 10.672
+            },
+            "peak_rss_kib": {
+              "min": 5348,
+              "median": 5500,
+              "max": 5728
+            }
+          }
+        }
+      }
+    },
+    {
+      "pattern": "random",
+      "timestamps": "irregular",
+      "rows": 120000,
+      "numeric_bytes": 1920000,
+      "query_from": 58800000,
+      "query_to": 61200000,
+      "results": {
+        "scalar": {
+          "bytes": 1201916,
+          "compressed_blocks": 118,
+          "pack": {
+            "ms": {
+              "min": 31.247,
+              "median": 31.614,
+              "max": 32.869
+            },
+            "peak_rss_kib": {
+              "min": 1696,
+              "median": 1828,
+              "max": 1960
+            }
+          },
+          "unpack": {
+            "ms": {
+              "min": 39.382,
+              "median": 40.652,
+              "max": 41.618
+            },
+            "peak_rss_kib": {
+              "min": 1596,
+              "median": 1812,
+              "max": 1940
+            }
+          },
+          "query": {
+            "ms": {
+              "min": 4.543,
+              "median": 5.004,
+              "max": 5.344
+            },
+            "peak_rss_kib": {
+              "min": 1600,
+              "median": 1796,
+              "max": 1900
+            }
+          }
+        },
+        "sse2": {
+          "bytes": 1201916,
+          "compressed_blocks": 118,
+          "pack": {
+            "ms": {
+              "min": 25.626,
+              "median": 26.131,
+              "max": 27.795
+            },
+            "peak_rss_kib": {
+              "min": 1696,
+              "median": 1820,
+              "max": 1972
+            }
+          },
+          "unpack": {
+            "ms": {
+              "min": 35.275,
+              "median": 36.336,
+              "max": 37.877
+            },
+            "peak_rss_kib": {
+              "min": 1744,
+              "median": 1892,
+              "max": 1956
+            }
+          },
+          "query": {
+            "ms": {
+              "min": 4.211,
+              "median": 4.522,
+              "max": 5.028
+            },
+            "peak_rss_kib": {
+              "min": 1744,
+              "median": 1892,
+              "max": 1940
+            }
+          }
+        },
+        "raw": {
+          "bytes": 1930036,
+          "compressed_blocks": 0,
+          "pack": {
+            "ms": {
+              "min": 25.03,
+              "median": 25.559,
+              "max": 27.14
+            },
+            "peak_rss_kib": {
+              "min": 1584,
+              "median": 1868,
+              "max": 1900
+            }
+          },
+          "unpack": {
+            "ms": {
+              "min": 34.586,
+              "median": 35.007,
+              "max": 36.396
+            },
+            "peak_rss_kib": {
+              "min": 1796,
+              "median": 1876,
+              "max": 1968
+            }
+          },
+          "query": {
+            "ms": {
+              "min": 3.798,
+              "median": 4.808,
+              "max": 5.198
+            },
+            "peak_rss_kib": {
+              "min": 1764,
+              "median": 1876,
+              "max": 1900
+            }
+          }
+        },
+        "zstd_3": {
+          "bytes": 1215507,
+          "compress": {
+            "ms": {
+              "min": 24.637,
+              "median": 26.504,
+              "max": 31.669
+            },
+            "peak_rss_kib": {
+              "min": 8100,
+              "median": 8248,
+              "max": 8376
+            }
+          },
+          "decompress": {
+            "ms": {
+              "min": 6.892,
+              "median": 7.659,
+              "max": 8.127
+            },
+            "peak_rss_kib": {
+              "min": 5464,
+              "median": 5804,
+              "max": 5972
+            }
+          }
+        }
+      }
+    }
+  ]
+}
