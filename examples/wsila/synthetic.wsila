@@ -1,0 +1,13 @@
+use serial
+use time
+
+fn main():
+    # Synthetic timestamps in microseconds, one channel with ID zero.
+    time.sleep(2s)
+    serial.println("0,0,20")
+    time.sleep(100ms)
+    serial.println("100000,0,23")
+    time.sleep(100ms)
+    serial.println("200000,0,21")
+    loop:
+        time.sleep(1s)

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" role="img" aria-labelledby="title">
+  <title id="title">Surco</title>
+  <path d="M8 22h14l12 25 12-25h23M8 34h11l15 30 16-30h19M8 10h19l7 13 7-13h28"
+    fill="none" stroke="#316651" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="89" y="59" fill="#316651" font-family="system-ui,sans-serif" font-size="55" font-weight="650">surco</text>
+</svg>

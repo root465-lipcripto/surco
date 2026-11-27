@@ -81,6 +81,7 @@ SURCO_API surco_status surco_decoder_seek(surco_decoder *ctx, uint64_t timestamp
 SURCO_API surco_status surco_decoder_seek_range(surco_decoder *ctx, uint64_t lower, uint64_t upper);
 SURCO_API surco_status surco_decoder_read_through(surco_decoder *ctx, uint64_t upper,
     uint64_t *timestamp, int32_t *values, size_t capacity);
+SURCO_API void surco_decoder_destroy(surco_decoder *ctx);
 SURCO_API surco_status surco_get_metadata(const surco_decoder *ctx, surco_metadata *out);
 SURCO_API surco_status surco_verify(FILE *stream, surco_metadata *out, surco_backend backend);
 /* Output is a distinct empty stream. Recovery validates each retained block and
